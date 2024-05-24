@@ -1,0 +1,42 @@
+name: Add User
+
+on:
+  repository_dispatch:
+    types: [add-user]
+
+jobs:
+  add-user:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Add user to YAML file
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+        run: |
+          USERNAME=$(jq -r .client_payload.username $GITHUB_EVENT_PATH)
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git checkout -b add-user-${USERNAME}
+          curl -H "Authorization: token $GH_PAT" -H "Accept: application/vnd.github.v3.raw" -O -L https://raw.githubusercontent.com/directx3r/diy_self_service/main/users.yaml
+          echo "- ${USERNAME}" >> users.yaml
+          git add users.yaml
+          git commit -m "Add user ${USERNAME}"
+          git push origin add-user-${USERNAME}
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.GH_PAT }}
+          commit-message: Add user ${{ env.USERNAME }}
+          title: Add user ${{ env.USERNAME }}
+          body: This pull request adds the user ${{ env.USERNAME }} to the users.yaml file.
+          head-branch: add-user-${{ env.USERNAME }}
+          base-branch: main
