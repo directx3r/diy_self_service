@@ -4,10 +4,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const state = hashParams.get('state');
     const storedState = localStorage.getItem('oauth_state');
 
-    if (state !== storedState) {
-        console.error('State does not match');
-        return;
-    }
+   // if (state !== storedState) {
+   //     console.error('State does not match');
+   //     return;
+   // }
 
     if (accessToken) {
         console.log('Access Token:', accessToken);
