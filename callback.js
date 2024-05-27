@@ -2,14 +2,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const code = new URL(window.location.href).searchParams.get('code');
     const clientId = 'Ov23cttySQMaE3IwT55f';
     const clientSecret = '59e8d383efe87a11ed955a6b883cf0f4f753f7f3';
-    const tokenUrl = `https://github.com/login/oauth/access_token`;
-    
+    const tokenUrl = `https://your-cors-proxy.herokuapp.com/https://github.com/login/oauth/access_token`;
+
     if (code) {
         fetch(tokenUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
             },
             body: JSON.stringify({
                 client_id: clientId,
