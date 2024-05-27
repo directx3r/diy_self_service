@@ -5,7 +5,7 @@ const scope = 'repo'; // Adjust the scope based on your requirements
 
 document.getElementById('loginButton').addEventListener('click', () => {
     const state = generateRandomString();
-    localStorage.setItem('oauth_state', state);
+    //localStorage.setItem('oauth_state', state);
 
     const authUrl = `${authorizationEndpoint}?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${scope}&response_type=token&state=${state}`;
     window.location.href = authUrl;
