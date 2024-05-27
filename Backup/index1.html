@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Pages Form</title>
+</head>
+<body>
+    <h1>Add a New User</h1>
+    <form id="userForm">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <button type="submit">Add User</button>
+    </form>
+    <script>
+        document.getElementById('userForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const username = document.getElementById('username').value;
+
+        fetch('https://api.github.com/repos/directx3r/diy_self_service/dispatches', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/vnd.github.everest-preview+json',
+                // The token should not be here, it will be handled by the action
+            },
+            body: JSON.stringify({
+                event_type: 'add-user',
+                client_payload: { username: username }
+            })
+        }).then(response => {
+            if(response.ok) {
+                alert('Request sent successfully!');
+            } else {
+                alert('Error sending request.');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+    </script>
+</body>
+</html>
