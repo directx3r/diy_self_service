@@ -39,6 +39,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 async function fetchToken(code, codeVerifier) {
     const clientId = 'Ov23cttySQMaE3IwT55f';
+    const clientSecret = '59e8d383efe87a11ed955a6b883cf0f4f753f7f3'; 
     const redirectUri = 'https://directx3r.github.io/diy_self_service/callback.html';
     const tokenEndpoint = 'https://github.com/login/oauth/access_token';
 
@@ -51,6 +52,7 @@ async function fetchToken(code, codeVerifier) {
         },
         body: new URLSearchParams({
             client_id: clientId,
+            client_secret: clientSecret,
             redirect_uri: redirectUri,
             grant_type: 'authorization_code',
             code: code,
