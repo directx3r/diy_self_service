@@ -38,8 +38,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 async function fetchToken(code, codeVerifier) {
-    const clientId = 'YOUR_CLIENT_ID';
-    const redirectUri = 'https://YOUR_USERNAME.github.io/YOUR_REPO/callback.html';
+    const clientId = 'Ov23cttySQMaE3IwT55f';
+    const redirectUri = 'https://directx3r.github.io/diy_self_service/callback.html';
     const tokenEndpoint = 'https://github.com/login/oauth/access_token';
 
     const response = await fetch(tokenEndpoint, {
