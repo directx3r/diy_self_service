@@ -44,6 +44,7 @@ async function fetchToken(code, codeVerifier) {
 
     const response = await fetch(tokenEndpoint, {
         method: 'POST',
+        mode: 'no-cors',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
             'Accept': 'application/json'
