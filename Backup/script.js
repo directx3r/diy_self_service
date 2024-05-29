@@ -1,58 +1,31 @@
-document.getElementById('userForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-    const username = document.getElementById('username').value;
-    const token = document.getElementById('token').value;
-    const repoOwner = 'directx3r';
-    const repoName = 'diy_self_service';
-    const filePath = 'users.yaml';
+const clientId = 'Ov23cttySQMaE3IwT55f';
+const redirectUri = 'https://directx3r.github.io/diy_self_service/callback.html';
+const authorizationEndpoint = 'https://github.com/login/oauth/authorize';
+const tokenEndpoint = 'https://github.com/login/oauth/access_token';
+const scope = 'repo'; // Adjust based on your needs
 
-    // GitHub API URLs
-    const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`;
+document.getElementById('loginButton').addEventListener('click', async () => {
+    const state = generateRandomString();
+    const codeVerifier = generateRandomString();
+    const codeChallenge = await generateCodeChallenge(codeVerifier);
+    
+    localStorage.setItem('oauth_state', state);
+    localStorage.setItem('code_verifier', codeVerifier);
 
-    // Fetch the existing file content and its SHA
-    fetch(apiUrl, {
-        method: 'GET',
-        headers: {
-            'Authorization': `token ${token}`,
-            'Accept': 'application/vnd.github.v3+json'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        // Decode the file content from base64
-        const fileContent = atob(data.content);
-        const fileSha = data.sha;
-
-        // Append the new username to the file content
-        const newContent = fileContent + `\n- ${username}`;
-
-        // Encode the new content to base64
-        const newContentBase64 = btoa(newContent);
-
-        // Update the file content on GitHub
-        fetch(apiUrl, {
-            method: 'PUT',
-            headers: {
-                'Authorization': `token ${token}`,
-                'Accept': 'application/vnd.github.v3+json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                message: `Add user ${username}`,
-                content: newContentBase64,
-                sha: fileSha
-            })
-        })
-        .then(response => {
-            if (response.ok) {
-                alert('User added successfully!');
-            } else {
-                response.json().then(data => {
-                    alert('Error: ' + data.message);
-                });
-            }
-        })
-        .catch(error => console.error('Error:', error));
-    })
-    .catch(error => console.error('Error:', error));
+    const authUrl = `${authorizationEndpoint}?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${scope}&response_type=code&state=${state}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
+    window.location.href = authUrl;
 });
+
+function generateRandomString() {
+    return [...crypto.getRandomValues(new Uint8Array(32))].map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function generateCodeChallenge(codeVerifier) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(codeVerifier);
+    const hash = await crypto.subtle.digest('SHA-256', data);
+    return btoa(String.fromCharCode(...new Uint8Array(hash)))
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_')
+        .replace(/=+$/, '');
+}
