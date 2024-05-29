@@ -1,5 +1,5 @@
 const clientId = 'Iv23li330STWqvRxJbYs';
-const redirectUri = 'https://directx3r.github.io/diy_github_apps/callback.html';
+const redirectUri = 'https://directx3r.github.io/diy_self_service/callback.html';
 const authorizationEndpoint = 'https://github.com/login/oauth/authorize';
 const scope = 'repo'; // Adjust based on your needs
 
