@@ -13,7 +13,11 @@
         <button id="submitButton">Add User</button>
     </div>
     <p id="message"></p>
-    <script src="https://cdn.jsdelivr.net/npm/@octokit/rest/dist/octokit-rest.min.js"></script>
-    <script src="callback.js"></script>
+    <script type="module">
+        import { Octokit } from "https://esm.sh/@octokit/rest";
+        import { handleCallback, fetchToken, addUserToYaml } from "./callback.js";
+        handleCallback(Octokit, fetchToken, addUserToYaml);
+    </script>
 </body>
 </html>
+

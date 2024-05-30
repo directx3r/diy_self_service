@@ -1,44 +1,46 @@
-document.addEventListener('DOMContentLoaded', async () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get('code');
-    const state = urlParams.get('state');
-    const storedState = localStorage.getItem('oauth_state');
+export function handleCallback(Octokit, fetchToken, addUserToYaml) {
+    document.addEventListener('DOMContentLoaded', async () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        const state = urlParams.get('state');
+        const storedState = localStorage.getItem('oauth_state');
 
-    if (state !== storedState) {
-        console.error('State does not match');
-        document.getElementById('message').innerText = 'State does not match';
-        return;
-    }
-
-    if (code) {
-        try {
-            const token = await fetchToken(code);
-            if (token.error) {
-                throw new Error(token.error_description);
-            }
-            localStorage.setItem('github_token', token.access_token);
-            document.getElementById('message').innerText = 'Login successful!';
-            localStorage.removeItem('oauth_state');
-
-            document.getElementById('userForm').style.display = 'block';
-
-            document.getElementById('submitButton').addEventListener('click', function(event) {
-                event.preventDefault();
-                const username = document.getElementById('username').value;
-                addUserToYaml(username, token.access_token);
-            });
-
-        } catch (error) {
-            console.error('Error exchanging token:', error);
-            document.getElementById('message').innerText = 'Error exchanging token: ' + error.message;
+        if (state !== storedState) {
+            console.error('State does not match');
+            document.getElementById('message').innerText = 'State does not match';
+            return;
         }
-    } else {
-        console.error('Authorization code not found');
-        document.getElementById('message').innerText = 'Authorization code not found';
-    }
-});
 
-async function fetchToken(code) {
+        if (code) {
+            try {
+                const token = await fetchToken(code);
+                if (token.error) {
+                    throw new Error(token.error_description);
+                }
+                localStorage.setItem('github_token', token.access_token);
+                document.getElementById('message').innerText = 'Login successful!';
+                localStorage.removeItem('oauth_state');
+
+                document.getElementById('userForm').style.display = 'block';
+
+                document.getElementById('submitButton').addEventListener('click', function(event) {
+                    event.preventDefault();
+                    const username = document.getElementById('username').value;
+                    addUserToYaml(username, token.access_token, Octokit);
+                });
+
+            } catch (error) {
+                console.error('Error exchanging token:', error);
+                document.getElementById('message').innerText = 'Error exchanging token: ' + error.message;
+            }
+        } else {
+            console.error('Authorization code not found');
+            document.getElementById('message').innerText = 'Authorization code not found';
+        }
+    });
+}
+
+export async function fetchToken(code) {
     const clientId = 'Iv23lv23li330STWqvRxJbYs';
     const clientSecret = 'Y1d8d6805623f127cac7d4a5f732cae0e8d7eadc3';
     const redirectUri = 'https://directx3r.github.io/diy_self_service/callback.html';
@@ -61,10 +63,10 @@ async function fetchToken(code) {
     return response.json();
 }
 
-async function addUserToYaml(username, token) {
+export async function addUserToYaml(username, token, Octokit) {
     const octokit = new Octokit({ auth: token });
-    const repoOwner = 'directx3rdiy_github_apps';
-    const repoName = 'diy_github_apps';
+    const repoOwner = 'directx3r';
+    const repoName = 'diy_self_service';
     const filePath = 'users.yaml';
 
     try {
