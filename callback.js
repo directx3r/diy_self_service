@@ -41,8 +41,8 @@ export function handleCallback(Octokit, fetchToken, addUserToYaml) {
 }
 
 export async function fetchToken(code) {
-    const clientId = 'Ov23cttySQMaE3IwT55f';
-    const clientSecret = '59e8d383efe87a11ed955a6b883cf0f4f753f7f3'; 
+    const clientId = 'Iv23lv23li330STWqvRxJbYs';
+    const clientSecret = 'Y1d8d6805623f127cac7d4a5f732cae0e8d7eadc3';
     const redirectUri = 'https://directx3r.github.io/diy_self_service/callback.html';
     const tokenEndpoint = 'https://github.com/login/oauth/access_token';
 
