@@ -1,4 +1,4 @@
-const clientId = 'Iv23lv23li330STWqvRxJbYs';
+const clientId = 'Ov23cttySQMaE3IwT55f';
 const redirectUri = 'https://directx3r.github.io/diy_self_service/callback.html';
 const authorizationEndpoint = 'https://github.com/login/oauth/authorize';
 const tokenEndpoint = 'https://github.com/login/oauth/access_token';
